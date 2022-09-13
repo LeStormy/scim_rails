@@ -36,7 +36,7 @@ module ScimRails
         user = @company
           .public_send(ScimRails.config.scim_users_scope)
           .find_or_initialize_by(find_by_username) do |u|
-            u.public_send(ScimRails.config.user_initialization_method, @company)
+            u.public_send(ScimRails.config.user_initialization_method, @company, find_value_for(:title))
         end
         user.assign_attributes(permitted_user_params)
         user.save!
