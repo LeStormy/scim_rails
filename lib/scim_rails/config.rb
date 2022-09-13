@@ -26,6 +26,7 @@ module ScimRails
       :mutable_user_attributes,
       :on_error,
       :user_initialization_method,
+      :on_update_user,
       :queryable_user_attributes,
       :scim_users_list_order,
       :scim_users_scope,

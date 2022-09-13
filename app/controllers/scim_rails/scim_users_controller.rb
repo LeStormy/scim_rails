@@ -33,7 +33,6 @@ module ScimRails
         username_key = ScimRails.config.queryable_user_attributes[:userName]
         find_by_username = Hash.new
         find_by_username[username_key] = permitted_user_params[username_key]
-        byebug
         user = @company
           .public_send(ScimRails.config.scim_users_scope)
           .find_or_initialize_by(find_by_username) do |u|
@@ -54,7 +53,11 @@ module ScimRails
     def put_update
       user = @company.public_send(ScimRails.config.scim_users_scope).find(params[:id])
       update_status(user) unless put_active_param.nil?
-      user.update!(permitted_user_params)
+      user.assign_attributes(permitted_user_params)
+      if ScimRails.config.on_update_user.present?
+        user.public_send(ScimRails.config.on_update_user, @company, find_value_for(:title))
+      end
+      user.save!
       json_scim_response(object: user)
     end
 
